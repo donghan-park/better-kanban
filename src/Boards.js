@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import './Board.scss';
 
-import Task from './Task';
+import TaskList from './TaskList';
 
 const Boards = () => {
     const [mainObj, setMainObj] = useState({
@@ -27,41 +28,19 @@ const Boards = () => {
         if(!destination) return;
         if(destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-        const newTaskOrder = mainObj.taskOrder;
-        newTaskOrder.splice(source.index, 1);
-        newTaskOrder.splice(destination.index, 0, draggableId);
+        const newMainObj = {...mainObj};
+        mainObj.lists[source.droppableId].taskIds.splice(source.index, 1);
+        mainObj.lists[destination.droppableId].taskIds.splice(destination.index, 0, draggableId);
 
-        setMainObj({ ...mainObj, taskOrder: newTaskOrder });
+        setMainObj(newMainObj);
     }
 
     return (
         <div className='boards'>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div className="column-container">
-                    <div className="title">
-                        EX TASK LIST 1
-                    </div>
-                    <Droppable droppableId='yolo'>
-                        {provided => (
-                            <div 
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            className="list"
-                            >
-                                {mainObj.taskOrder.map((taskId, index) => (
-                                    <Task 
-                                    key={taskId}
-                                    id={taskId}
-                                    index={index}
-                                    title={mainObj.tasks[taskId].title}
-                                    desc={mainObj.tasks[taskId].desc}
-                                    />
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </div>
+                {mainObj.listOrder.map(listId => (
+                    <TaskList key={listId} tasks={mainObj.tasks} id={listId} title={mainObj.lists[listId].title} taskIds={mainObj.lists[listId].taskIds}/>
+                ))}
             </DragDropContext>
         </div>
     )

@@ -1,0 +1,55 @@
+@import './Colors.scss';
+
+$task-padding: 0.5rem;
+$task-padding-half: 0.25rem;
+
+.boards {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-list-container {
+  border-radius: 20px;
+  background-color: $grey;
+  width: 450px;
+  height: 80vh;
+  margin: 1rem;
+  display: grid;
+  grid-template-rows: 10% auto;
+
+  & > .title {
+    grid-row: 1 / span 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 2rem;
+  }
+
+  & > .task-list {
+    grid-row: 2 / span 1;
+    overflow: auto;
+    background-color: white;
+    margin: 0.8rem;
+    margin-top: 0;
+    border-radius: 10px;
+    padding: $task-padding-half 0;
+  }
+}
+
+.task {
+  padding: $task-padding-half $task-padding;
+
+  & > .shadow {
+    background-color: $grey-light;
+    border-radius: 10px;
+    padding: 1rem;
+
+    & > .title {
+      font-weight: bold;
+      color: $grey-dark;
+    }
+  }
+}
