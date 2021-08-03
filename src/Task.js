@@ -1,8 +1,8 @@
 import { Draggable } from 'react-beautiful-dnd';
 
-const Task = ({ id, index, title, desc }) => {
+const Task = ({ index, taskObj, requestEditTask }) => {
     return (
-        <Draggable draggableId={id} index={index}>
+        <Draggable draggableId={taskObj.id} index={index}>
             {provided => (
                 <div 
                 {...provided.draggableProps}
@@ -10,9 +10,9 @@ const Task = ({ id, index, title, desc }) => {
                 ref={provided.innerRef}
                 className="task"
                 >
-                    <div className="shadow">
-                        <p className="title">{title}</p>
-                        <p className="desc">{desc}</p>
+                    <div className="shadow" onClick={() => requestEditTask(taskObj.id)}>
+                        <p className="title">{taskObj.title}</p>
+                        <p className="desc">{taskObj.desc}</p>
                     </div>
                 </div>
             )}
