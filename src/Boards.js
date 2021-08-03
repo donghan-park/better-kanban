@@ -38,22 +38,17 @@ const Boards = () => {
 
     const [ taskObjToEdit, setTaskObjToEdit ] = useState({});
 
-    // function sendMessage(message){
-    //     console.log(message);
-    //     if(message === 'background') setEditingTaskInfo({ ...editingTaskInfo, id: '' });
-    // }
-
     function requestEditTask(taskId){
         setTaskObjToEdit(mainObj.tasks[taskId]);
     }
 
     function editTask(taskObj){
-        if(mainObj.tasks[taskObj.id]) {
-            const newMainObj = { ...mainObj };
-            newMainObj.tasks[taskObj.id] = taskObj;
-            setMainObj(newMainObj);
-            setTaskObjToEdit({});
-        }
+        if(!mainObj.tasks[taskObj.id]) return;
+        
+        const newMainObj = { ...mainObj };
+        newMainObj.tasks[taskObj.id] = taskObj;
+        setMainObj(newMainObj);
+        setTaskObjToEdit({});
     }
 
     return (
