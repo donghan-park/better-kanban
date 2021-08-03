@@ -1,7 +1,7 @@
 import { Droppable } from 'react-beautiful-dnd';
 import Task from './Task';
 
-const TaskList = ({ tasks, id, title, taskIds, requestEditTask }) => {
+const TaskList = ({ tasks, id, title, taskIds, requestEditTask, requestDeleteTask }) => {
     return (
         <div className="task-list-container">
             <div className="title">{title}</div>
@@ -18,6 +18,7 @@ const TaskList = ({ tasks, id, title, taskIds, requestEditTask }) => {
                             index={index}
                             taskObj={tasks[taskId]}
                             requestEditTask={requestEditTask}
+                            requestDeleteTask={returnObj => requestDeleteTask({ ...returnObj, listId: id })}
                             />
                         ))}
                         {provided.placeholder}
@@ -28,4 +29,4 @@ const TaskList = ({ tasks, id, title, taskIds, requestEditTask }) => {
     )
 }
 
-export default TaskList
+export default TaskList;

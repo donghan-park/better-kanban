@@ -1,6 +1,18 @@
 import { Draggable } from 'react-beautiful-dnd';
+import { useEffect } from 'react';
 
-const Task = ({ index, taskObj, requestEditTask }) => {
+var activeTaskId = null;
+
+const Task = ({ index, taskObj, requestEditTask, requestDeleteTask }) => {
+    useEffect(() => {
+        console.log(taskObj.id + ' made')
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Backspace' && taskObj.id === activeTaskId){
+                requestDeleteTask({ taskId: taskObj.id, taskIndex: index });
+            }
+        });
+    }, []);
+
     return (
         <Draggable draggableId={taskObj.id} index={index}>
             {provided => (
@@ -10,7 +22,11 @@ const Task = ({ index, taskObj, requestEditTask }) => {
                 ref={provided.innerRef}
                 className="task"
                 >
-                    <div className="shadow" onClick={() => requestEditTask(taskObj.id)}>
+                    <div className="shadow" 
+                    onClick={() => requestEditTask(taskObj)}
+                    onMouseEnter={() => activeTaskId = taskObj.id}
+                    onMouseLeave={() => activeTaskId = null}
+                    >
                         <p className="title">{taskObj.title}</p>
                         <p className="desc">{taskObj.desc}</p>
                     </div>
@@ -20,4 +36,4 @@ const Task = ({ index, taskObj, requestEditTask }) => {
     )
 }
 
-export default Task
+export default Task;

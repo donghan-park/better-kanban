@@ -15,4 +15,4 @@ const EditTaskBox = ({ taskObj, editTask }) => {
     )
 }
 
-export default EditTaskBox
+export default EditTaskBox;

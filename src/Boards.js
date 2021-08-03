@@ -15,7 +15,6 @@ const Boards = () => {
             'five': { id: 'five', title: 'task 5', desc: 'desc for task 5' },
             'six': { id: 'six', title: 'task 6', desc: 'desc for task 6' }
         },
-        taskOrder: ['one', 'two', 'three', 'four', 'five', 'six'],
         lists: {
             'one': { id: 'one', title: 'list 1', taskIds: ['one', 'two', 'three', 'four'] },
             'two': { id: 'two', title: 'list 2', taskIds: ['five', 'six'] }
@@ -38,17 +37,20 @@ const Boards = () => {
 
     const [ taskObjToEdit, setTaskObjToEdit ] = useState({});
 
-    function requestEditTask(taskId){
-        setTaskObjToEdit(mainObj.tasks[taskId]);
-    }
-
     function editTask(taskObj){
         if(!mainObj.tasks[taskObj.id]) return;
-        
+
         const newMainObj = { ...mainObj };
         newMainObj.tasks[taskObj.id] = taskObj;
         setMainObj(newMainObj);
         setTaskObjToEdit({});
+    }
+
+    function requestDeleteTask(returnObj){
+        const newMainObj = { ...mainObj };
+        newMainObj.lists[returnObj.listId].taskIds.splice(returnObj.taskIndex, 1);
+        delete newMainObj.tasks[returnObj.taskId];
+        setMainObj(newMainObj);
     }
 
     return (
@@ -61,7 +63,8 @@ const Boards = () => {
                     tasks={mainObj.tasks} 
                     title={mainObj.lists[listId].title} 
                     taskIds={mainObj.lists[listId].taskIds}
-                    requestEditTask={requestEditTask}
+                    requestEditTask={taskObj => setTaskObjToEdit(taskObj)}
+                    requestDeleteTask={requestDeleteTask}
                     />
                 ))}
             </DragDropContext>
@@ -72,4 +75,4 @@ const Boards = () => {
     )
 }
 
-export default Boards
+export default Boards;
