@@ -5,7 +5,7 @@ import './Board.scss';
 import TaskList from './TaskList';
 import EditTaskBox from './EditTaskBox';
 
-var activeTaskObj = null;
+var activeTaskObj, activeListId = null;
 const firedKeys = {};
 
 const Boards = () => {
@@ -63,8 +63,33 @@ const Boards = () => {
     }
 
     const handleTaskHover = returnObj => activeTaskObj = returnObj;
+    const handleListHover = returnId => activeListId = returnId;
     
+    useEffect(() => {
+        function onKeyDown(e){
+            if(e.key in firedKeys) return;
+            firedKeys[e.key] = 0;
+            if('x' in firedKeys && 'Control' in firedKeys && activeTaskObj){
+                deleteTask(activeTaskObj);
+            }
+            if('z' in firedKeys && 'Control' in firedKeys && activeListId){
+                console.log('added to ' + activeListId);
+            }
+        }
     
+        function onKeyUp(e){
+            if(!(e.key in firedKeys)) return;
+            delete firedKeys[e.key];
+        }
+
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className='boards'>
@@ -78,6 +103,7 @@ const Boards = () => {
                     taskIds={mainObj.lists[listId].taskIds}
                     requestEditTask={taskObj => setTaskObjToEdit(taskObj)}
                     handleTaskHover={handleTaskHover}
+                    handleListHover={handleListHover}
                     />
                 ))}
             </DragDropContext>
