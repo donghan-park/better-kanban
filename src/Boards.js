@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import './Board.scss';
 
 import TaskList from './TaskList';
 import EditTaskBox from './EditTaskBox';
+
+var activeTaskObj = null;
+const firedKeys = {};
 
 const Boards = () => {
     const [mainObj, setMainObj] = useState({
@@ -13,14 +16,22 @@ const Boards = () => {
             'three': { id: 'three', title: 'task 3', desc: 'desc for task 3' },
             'four': { id: 'four', title: 'task 4', desc: 'desc for task 4' },
             'five': { id: 'five', title: 'task 5', desc: 'desc for task 5' },
-            'six': { id: 'six', title: 'task 6', desc: 'desc for task 6' }
+            'six': { id: 'six', title: 'task 6', desc: 'desc for task 6' },
+            'seven': { id: 'seven', title: 'task 7', desc: 'desc for task 7' },
+            'eight': { id: 'eight', title: 'task 8', desc: 'desc for task 8' }
         },
         lists: {
             'one': { id: 'one', title: 'list 1', taskIds: ['one', 'two', 'three', 'four'] },
-            'two': { id: 'two', title: 'list 2', taskIds: ['five', 'six'] }
+            'two': { id: 'two', title: 'list 2', taskIds: ['five', 'six'] },
+            'three' : { id: 'three', title: 'list 3', taskIds: ['seven', 'eight'] },
+            'four' : { id: 'four', title: 'list 4', taskIds: [] },
+            'five' : { id: 'five', title: 'list 5', taskIds: [] },
+            'six': { id: 'six', title: 'list 6', taskIds: [] }
         },
-        listOrder: ['one', 'two']
+        listOrder: ['one', 'two', 'three', 'four', 'five', 'six']
     });
+    const [ taskObjToEdit, setTaskObjToEdit ] = useState({});
+
 
     const onDragEnd = result => {
         const { destination, source, draggableId } = result;
@@ -35,9 +46,7 @@ const Boards = () => {
         setMainObj(newMainObj);
     }
 
-    const [ taskObjToEdit, setTaskObjToEdit ] = useState({});
-
-    function editTask(taskObj){
+    const editTask = taskObj => {
         if(!mainObj.tasks[taskObj.id]) return;
 
         const newMainObj = { ...mainObj };
@@ -46,12 +55,16 @@ const Boards = () => {
         setTaskObjToEdit({});
     }
 
-    function requestDeleteTask(returnObj){
+    const deleteTask = returnObj => {
         const newMainObj = { ...mainObj };
         newMainObj.lists[returnObj.listId].taskIds.splice(returnObj.taskIndex, 1);
         delete newMainObj.tasks[returnObj.taskId];
         setMainObj(newMainObj);
     }
+
+    const handleTaskHover = returnObj => activeTaskObj = returnObj;
+    
+    
 
     return (
         <div className='boards'>
@@ -64,7 +77,7 @@ const Boards = () => {
                     title={mainObj.lists[listId].title} 
                     taskIds={mainObj.lists[listId].taskIds}
                     requestEditTask={taskObj => setTaskObjToEdit(taskObj)}
-                    requestDeleteTask={requestDeleteTask}
+                    handleTaskHover={handleTaskHover}
                     />
                 ))}
             </DragDropContext>

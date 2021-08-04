@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+@import './Colors.scss';
 
 * {
   font-family: "Poppins", sans-serif;
@@ -10,4 +11,9 @@
   position: absolute;
   height: 100%;
   width: 100%;
+  background-color: $grey4;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
 }
